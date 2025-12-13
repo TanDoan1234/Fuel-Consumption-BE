@@ -31,6 +31,6 @@ tmp/
 templates/
 # Node.js dependencies
 node_modules/
-models/ceto_best_ml_model.pkl
-models/poseidon_best_ml_model.pkl
-models/triton_best_ml_model.pkl
+models/ceto_stacked.pkl
+models/poseidon_best_model-001.pkl
+models/triton_best_model.pkl

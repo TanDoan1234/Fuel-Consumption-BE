@@ -7,10 +7,11 @@ from typing import Dict, Any, List
 
 class ModelService:
     # Map ship type -> model file
+    # Map ship type -> model file (phù hợp với các file .pkl hiện có trong /models)
     SHIP_MODEL_MAP = {
-        "CETO": "models/ceto_best_ml_model.pkl",
-        "POSEIDON": "models/poseidon_best_ml_model.pkl",
-        "TRITON": "models/triton_best_ml_model.pkl",
+        "CETO": "models/ceto_stacked.pkl",
+        "POSEIDON": "models/poseidon_best_model-001.pkl",
+        "TRITON": "models/triton_best_model.pkl",
     }
 
     # Feature order EXACTLY like your test script

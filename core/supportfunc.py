@@ -57,6 +57,43 @@ def get_example_response(db: Session, user_message: str):
     return None
 
 
+def _normalize_markdown(text: str) -> str:
+    """
+    Chuẩn hóa markdown: loại bỏ các ký tự * và ** nhưng giữ lại format
+    """
+    if not text:
+        return text
+    
+    import re
+    
+    # Loại bỏ ** (bold markdown) - giữ lại text bên trong
+    text = re.sub(r'\*\*([^*]+)\*\*', r'\1', text)
+    
+    # Loại bỏ * (italic markdown) - giữ lại text bên trong
+    text = re.sub(r'\*([^*]+)\*', r'\1', text)
+    
+    # Loại bỏ các ký tự * còn sót lại (không có cặp)
+    text = re.sub(r'\*+', '', text)
+    
+    # Loại bỏ các dấu # (heading markdown) ở đầu dòng
+    text = re.sub(r'^#+\s*', '', text, flags=re.MULTILINE)
+    
+    # Loại bỏ các dấu - hoặc * ở đầu dòng (list markdown)
+    text = re.sub(r'^[\s]*[-*+]\s+', '', text, flags=re.MULTILINE)
+    
+    # Loại bỏ các dấu ` (code markdown)
+    text = re.sub(r'`([^`]+)`', r'\1', text)
+    
+    # Loại bỏ các dấu _ (underline/italic markdown)
+    text = re.sub(r'_([^_]+)_', r'\1', text)
+    text = re.sub(r'__([^_]+)__', r'\1', text)
+    
+    # Loại bỏ khoảng trắng thừa
+    text = re.sub(r'\n\s*\n\s*\n', '\n\n', text)
+    
+    return text.strip()
+
+
 def call_llm(prediction_value: float, params: Dict[str, Any]) -> str:
     assistant_message = (
     f"Bạn PHẢI trả lời HOÀN TOÀN bằng tiếng Việt, "
@@ -65,10 +102,12 @@ def call_llm(prediction_value: float, params: Dict[str, Any]) -> str:
     f"mức tiêu thụ nhiên liệu là {prediction_value:.2f} đơn vị.\n\n"
     f"Bây giờ để tôi giải thích ý nghĩa của kết quả này và những yếu tố nào đã ảnh hưởng đến dự đoán..."
     )
-    elaboration_prompt = "Vui lòng giải thích chi tiết về dự đoán này với những thông tin hữu ích."
+    elaboration_prompt = "Vui lòng giải thích chi tiết về dự đoán này với những thông tin hữu ích. KHÔNG sử dụng các ký tự markdown như *, **, #, -, ` trong câu trả lời."
     result_messages = [{"role": "assistant", "content": assistant_message}]
     elaboration_messages = result_messages + [{"role": "user", "content": elaboration_prompt}]
     final_response = asyncio.run(llm_service.chat(elaboration_messages, "vi"))
+    # Chuẩn hóa markdown sau khi nhận response
+    final_response = _normalize_markdown(final_response)
     return final_response
 
 

@@ -291,6 +291,7 @@ def chat_with_auto_prediction():
                 print(embedding_result)
                 print("Calling LLM for chat...")
                 llm_response = asyncio.run(llm_service.chat(embedding_result, "vi", model_name=model))
+                # LLM service đã tự động chuẩn hóa markdown
                 assistant_reply = llm_response
                 response_payload = {"response": llm_response}
         else:

@@ -74,7 +74,8 @@ class LLMService:
     def __init__(
         self, 
         api_url: str = "http://localhost:1234/v1/chat/completions",
-        model_name: str = "llama3-8b-instruct",
+        # Default khớp với model đã tải trong LM Studio (ví dụ meta-llama-3.1-8b-instruct)
+        model_name: str = "meta-llama-3.1-8b-instruct",
         temperature: float = 0.6,
         max_tokens: int = 1024
     ):
@@ -113,6 +114,41 @@ class LLMService:
         """Get system prompt for specified language"""
         return SYSTEM_PROMPT_VI if language == "vi" else SYSTEM_PROMPT_EN
     
+    def _normalize_markdown(self, text: str) -> str:
+        """
+        Chuẩn hóa markdown: loại bỏ các ký tự * và ** nhưng giữ lại format in đậm
+        Chuyển **text** thành text (in đậm) và *text* thành text (in nghiêng)
+        """
+        if not text:
+            return text
+        
+        # Loại bỏ ** (bold markdown) - giữ lại text bên trong
+        text = re.sub(r'\*\*([^*]+)\*\*', r'\1', text)
+        
+        # Loại bỏ * (italic markdown) - giữ lại text bên trong
+        text = re.sub(r'\*([^*]+)\*', r'\1', text)
+        
+        # Loại bỏ các ký tự * còn sót lại (không có cặp)
+        text = re.sub(r'\*+', '', text)
+        
+        # Loại bỏ các dấu # (heading markdown) ở đầu dòng
+        text = re.sub(r'^#+\s*', '', text, flags=re.MULTILINE)
+        
+        # Loại bỏ các dấu - hoặc * ở đầu dòng (list markdown)
+        text = re.sub(r'^[\s]*[-*+]\s+', '', text, flags=re.MULTILINE)
+        
+        # Loại bỏ các dấu ` (code markdown)
+        text = re.sub(r'`([^`]+)`', r'\1', text)
+        
+        # Loại bỏ các dấu _ (underline/italic markdown)
+        text = re.sub(r'_([^_]+)_', r'\1', text)
+        text = re.sub(r'__([^_]+)__', r'\1', text)
+        
+        # Loại bỏ khoảng trắng thừa
+        text = re.sub(r'\n\s*\n\s*\n', '\n\n', text)
+        
+        return text.strip()
+    
     async def chat(
         self, 
         messages: List[Dict[str, str]], 
@@ -137,18 +173,32 @@ class LLMService:
         ]
         print("Full messages sent to LLM:")
         print(full_messages)
+
+        # Chuẩn hóa tên model (frontend có thể gửi alias cũ)
+        model_to_use = model_name or self.model_name
         
+        # Mapping model names từ frontend sang LM Studio identifiers
+        model_mapping = {
+            "meta-llama-3-8b-instruct": "meta-llama-3.1-8b-instruct",
+            "meta-llama-3.1-8b-instruct": "meta-llama-3.1-8b-instruct",  # Giữ nguyên nếu đúng
+            "google/gemma-2-9b": "google/gemma-2-9b",
+            "qwen/qwen2.5-vl-7b": "qwen/qwen2.5-vl-7b",
+        }
+        
+        # Áp dụng mapping nếu có
+        if model_to_use in model_mapping:
+            model_to_use = model_mapping[model_to_use]
+
         payload = {
-        "model": model_name or self.model_name,
-        "messages": full_messages,
-        "temperature": self.temperature,
-        "max_tokens": self.max_tokens,
-        "stream": False
+            "model": model_to_use,
+            "messages": full_messages,
+            "temperature": self.temperature,
+            "max_tokens": self.max_tokens,
+            "stream": False,
         }
 
-        
         try:
-            async with httpx.AsyncClient(timeout=60.0) as client:
+            async with httpx.AsyncClient(timeout=httpx.Timeout(120.0)) as client:
                 response = await client.post(self.api_url, json=payload)
                 if response.status_code == 404:
                     fallback_model = await self._discover_model(client)
@@ -161,8 +211,11 @@ class LLMService:
                         response = await client.post(self.api_url, json=payload)
                 response.raise_for_status()
                 data = response.json()
-                return data["choices"][0]["message"]["content"]
-        except httpx.HTTPError as e:
+                raw_content = data["choices"][0]["message"]["content"]
+                # Chuẩn hóa markdown: loại bỏ các ký tự * và ** nhưng giữ lại format
+                normalized_content = self._normalize_markdown(raw_content)
+                return normalized_content
+        except httpx.HTTPStatusError as e:
             body = None
             if e.response is not None:
                 try:
@@ -170,6 +223,10 @@ class LLMService:
                 except ValueError:
                     body = e.response.text
             print(f" LLM HTTP error: {e} | response={body}")
+            raise
+        except httpx.RequestError as e:
+            # Request-level errors (timeout, connection) may not have response
+            print(f" LLM request error: {e}")
             raise
         except Exception as e:
             print(f" LLM error: {e}")
