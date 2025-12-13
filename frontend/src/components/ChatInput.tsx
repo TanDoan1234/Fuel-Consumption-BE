@@ -222,7 +222,7 @@ export default function ChatInput({ onSendMessage, themeColor, isDarkMode, custo
   const getColors = (theme: ThemeColor, dark: boolean) => {
     const base = {
       default: dark
-        ? { bg: 'bg-[#0a0a0a]', inputBg: 'bg-[#1a1a1a]', border: 'border-[#e3d5f7]/40', text: 'text-[#e5e5e5]', inputText: 'text-white', accent: 'text-[#e3d5f7]', primary: 'bg-[#e3d5f7]', primaryHover: 'hover:bg-[#d4c5eb]' }
+        ? { bg: 'bg-[#0a0a0a]', inputBg: 'bg-[#1a1a1a]', border: 'border-[#e3d5f7]/40', text: 'text-[#e5e5e5]', inputText: 'text-white', accent: 'text-[#e3d5f7]', primary: 'bg-[#7c3aed]', primaryHover: 'hover:bg-[#6d28d9]' }
         : { bg: 'bg-white', inputBg: 'bg-[#fafafa]', border: 'border-[#2002a6]/50', text: 'text-[#1a1a1a]', inputText: 'text-gray-900', accent: 'text-[#2002a6]', primary: 'bg-[#2002a6]', primaryHover: 'hover:bg-[#1a0285]' },
       pink: dark
         ? { bg: 'bg-black', inputBg: 'bg-[#1a1a1a]', border: 'border-pink-400/40', text: 'text-pink-50', inputText: 'text-white', accent: 'text-pink-300', primary: 'bg-pink-500', primaryHover: 'hover:bg-pink-600' }
@@ -285,8 +285,15 @@ export default function ChatInput({ onSendMessage, themeColor, isDarkMode, custo
             value={textMessage}
             onChange={(e) => setTextMessage(e.target.value)}
             onKeyDown={handleKeyDown}
-            className={`w-full min-h-[60px] max-h-[100px] resize-none ${colors.inputBg} border-2 ${colors.border} ${colors.inputText} text-sm pr-10 rounded-xl shadow-sm`}
-            style={themeColor === 'custom' ? { borderColor: customColor + '60' } : {}}
+            className={`w-full min-h-[60px] max-h-[100px] resize-none ${colors.inputBg} border-2 ${colors.border} text-sm pr-10 rounded-xl shadow-sm`}
+            style={themeColor === 'custom' 
+              ? { 
+                  borderColor: customColor + '60',
+                  color: isDarkMode ? "#ffffff" : "#0a0a0a",
+                }
+              : {
+                  color: isDarkMode ? "#ffffff" : "#0a0a0a",
+                }}
             rows={2}
           />
           <Sparkles className={`absolute top-3 right-3 h-4 w-4 ${colors.accent} opacity-50 pointer-events-none`} />
@@ -358,13 +365,24 @@ export default function ChatInput({ onSendMessage, themeColor, isDarkMode, custo
               <div className="space-y-3 pt-2">
                 <div className="flex items-center justify-between mb-2">
                   <p 
-                    className={`text-xs ${colors.accent}`}
-                    style={themeColor === 'custom' ? { color: customColor } : {}}
+                    className="text-xs font-medium"
+                    style={themeColor === 'custom' 
+                      ? { color: customColor } 
+                      : {
+                          color: isDarkMode ? colors.accent.replace('text-', '#') : colors.accent.replace('text-', '#'),
+                        }}
                   >
                     ⚠️ Bắt buộc nhập đủ 8 đặc trưng để dự đoán Total.MomentaryFuel (kg/s)
                   </p>
                   {savedInputs.length > 0 && (
-                    <p className={`text-[10px] ${colors.accent} opacity-60`}>
+                    <p 
+                      className="text-[10px]"
+                      style={themeColor === 'custom' 
+                        ? { color: customColor + 'CC' } 
+                        : {
+                            color: isDarkMode ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.65)",
+                          }}
+                    >
                       💾 {savedInputs.length}/10 lịch sử
                     </p>
                   )}
@@ -373,9 +391,21 @@ export default function ChatInput({ onSendMessage, themeColor, isDarkMode, custo
                 {/* Row 1: Ship Speed, Wind Speed, Wave Height */}
                 <div className="grid grid-cols-3 gap-3">
                   <div>
-                    <label className={`text-xs ${colors.text} block mb-1.5`}>
+                    <label 
+                      className="text-xs block mb-1.5 font-medium"
+                      style={{
+                        color: isDarkMode ? "#e5e5e5" : "#1a1a1a",
+                      }}
+                    >
                       {language === 'vi' ? 'Tốc độ tàu' : 'Ship Speed'}* (m/s)
-                      <span className="text-[10px] opacity-60 ml-1">{language === 'vi' ? 'TB' : 'Mean'}: 4.92</span>
+                      <span 
+                        className="text-[10px] ml-1"
+                        style={{
+                          color: isDarkMode ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.65)",
+                        }}
+                      >
+                        {language === 'vi' ? 'TB' : 'Mean'}: 4.92
+                      </span>
                     </label>
                     <Input
                       type="number"
@@ -385,14 +415,33 @@ export default function ChatInput({ onSendMessage, themeColor, isDarkMode, custo
                       min="0"
                       max="30"
                       step="0.01"
-                      className={`${colors.inputBg} border-2 ${colors.border} ${colors.inputText} h-9 text-xs`}
-                      style={themeColor === 'custom' ? { borderColor: customColor + '60' } : {}}
+                      className={`${colors.inputBg} border-2 ${colors.border} h-9 text-xs`}
+                      style={themeColor === 'custom' 
+                        ? { 
+                            borderColor: customColor + '60',
+                            color: isDarkMode ? "#ffffff" : "#0a0a0a",
+                          }
+                        : {
+                            color: isDarkMode ? "#ffffff" : "#0a0a0a",
+                          }}
                     />
                   </div>
                   <div>
-                    <label className={`text-xs ${colors.text} block mb-1.5`}>
+                    <label 
+                      className="text-xs block mb-1.5 font-medium"
+                      style={{
+                        color: isDarkMode ? "#e5e5e5" : "#1a1a1a",
+                      }}
+                    >
                       {language === 'vi' ? 'Tốc độ gió' : 'Wind Speed'}* (m/s)
-                      <span className="text-[10px] opacity-60 ml-1">{language === 'vi' ? 'TB' : 'Mean'}: 3.74</span>
+                      <span 
+                        className="text-[10px] ml-1"
+                        style={{
+                          color: isDarkMode ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.65)",
+                        }}
+                      >
+                        {language === 'vi' ? 'TB' : 'Mean'}: 3.74
+                      </span>
                     </label>
                     <Input
                       type="number"
@@ -402,14 +451,33 @@ export default function ChatInput({ onSendMessage, themeColor, isDarkMode, custo
                       min="0"
                       max="50"
                       step="0.01"
-                      className={`${colors.inputBg} border-2 ${colors.border} ${colors.inputText} h-9 text-xs`}
-                      style={themeColor === 'custom' ? { borderColor: customColor + '60' } : {}}
+                      className={`${colors.inputBg} border-2 ${colors.border} h-9 text-xs`}
+                      style={themeColor === 'custom' 
+                        ? { 
+                            borderColor: customColor + '60',
+                            color: isDarkMode ? "#ffffff" : "#0a0a0a",
+                          }
+                        : {
+                            color: isDarkMode ? "#ffffff" : "#0a0a0a",
+                          }}
                     />
                   </div>
                   <div>
-                    <label className={`text-xs ${colors.text} block mb-1.5`}>
+                    <label 
+                      className="text-xs block mb-1.5 font-medium"
+                      style={{
+                        color: isDarkMode ? "#e5e5e5" : "#1a1a1a",
+                      }}
+                    >
                       {language === 'vi' ? 'Độ cao sóng' : 'Wave Height'}* (m)
-                      <span className="text-[10px] opacity-60 ml-1">{language === 'vi' ? 'TB' : 'Mean'}: 0.72</span>
+                      <span 
+                        className="text-[10px] ml-1"
+                        style={{
+                          color: isDarkMode ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.65)",
+                        }}
+                      >
+                        {language === 'vi' ? 'TB' : 'Mean'}: 0.72
+                      </span>
                     </label>
                     <Input
                       type="number"
@@ -419,8 +487,15 @@ export default function ChatInput({ onSendMessage, themeColor, isDarkMode, custo
                       min="0.01"
                       max="20"
                       step="0.01"
-                      className={`${colors.inputBg} border-2 ${colors.border} ${colors.inputText} h-9 text-xs`}
-                      style={themeColor === 'custom' ? { borderColor: customColor + '60' } : {}}
+                      className={`${colors.inputBg} border-2 ${colors.border} h-9 text-xs`}
+                      style={themeColor === 'custom' 
+                        ? { 
+                            borderColor: customColor + '60',
+                            color: isDarkMode ? "#ffffff" : "#0a0a0a",
+                          }
+                        : {
+                            color: isDarkMode ? "#ffffff" : "#0a0a0a",
+                          }}
                     />
                   </div>
                 </div>
@@ -428,9 +503,21 @@ export default function ChatInput({ onSendMessage, themeColor, isDarkMode, custo
                 {/* Row 2: Wave Period, Sea Floor Depth, Temperature */}
                 <div className="grid grid-cols-3 gap-3">
                   <div>
-                    <label className={`text-xs ${colors.text} block mb-1.5`}>
+                    <label 
+                      className="text-xs block mb-1.5 font-medium"
+                      style={{
+                        color: isDarkMode ? "#e5e5e5" : "#1a1a1a",
+                      }}
+                    >
                       {language === 'vi' ? 'Chu kỳ sóng' : 'Wave Period'}* (s)
-                      <span className="text-[10px] opacity-60 ml-1">{language === 'vi' ? 'TB' : 'Mean'}: 5.29</span>
+                      <span 
+                        className="text-[10px] ml-1"
+                        style={{
+                          color: isDarkMode ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.65)",
+                        }}
+                      >
+                        {language === 'vi' ? 'TB' : 'Mean'}: 5.29
+                      </span>
                     </label>
                     <Input
                       type="number"
@@ -440,14 +527,33 @@ export default function ChatInput({ onSendMessage, themeColor, isDarkMode, custo
                       min="0"
                       max="30"
                       step="0.1"
-                      className={`${colors.inputBg} border-2 ${colors.border} ${colors.inputText} h-9 text-xs`}
-                      style={themeColor === 'custom' ? { borderColor: customColor + '60' } : {}}
+                      className={`${colors.inputBg} border-2 ${colors.border} h-9 text-xs`}
+                      style={themeColor === 'custom' 
+                        ? { 
+                            borderColor: customColor + '60',
+                            color: isDarkMode ? "#ffffff" : "#0a0a0a",
+                          }
+                        : {
+                            color: isDarkMode ? "#ffffff" : "#0a0a0a",
+                          }}
                     />
                   </div>
                   <div>
-                    <label className={`text-xs ${colors.text} block mb-1.5`}>
+                    <label 
+                      className="text-xs block mb-1.5 font-medium"
+                      style={{
+                        color: isDarkMode ? "#e5e5e5" : "#1a1a1a",
+                      }}
+                    >
                       {language === 'vi' ? 'Độ sâu đáy biển' : 'Sea Floor Depth'}* (m)
-                      <span className="text-[10px] opacity-60 ml-1">{language === 'vi' ? 'TB' : 'Mean'}: 127.46</span>
+                      <span 
+                        className="text-[10px] ml-1"
+                        style={{
+                          color: isDarkMode ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.65)",
+                        }}
+                      >
+                        {language === 'vi' ? 'TB' : 'Mean'}: 127.46
+                      </span>
                     </label>
                     <Input
                       type="number"
@@ -457,14 +563,33 @@ export default function ChatInput({ onSendMessage, themeColor, isDarkMode, custo
                       min="0"
                       max="11000"
                       step="0.1"
-                      className={`${colors.inputBg} border-2 ${colors.border} ${colors.inputText} h-9 text-xs`}
-                      style={themeColor === 'custom' ? { borderColor: customColor + '60' } : {}}
+                      className={`${colors.inputBg} border-2 ${colors.border} h-9 text-xs`}
+                      style={themeColor === 'custom' 
+                        ? { 
+                            borderColor: customColor + '60',
+                            color: isDarkMode ? "#ffffff" : "#0a0a0a",
+                          }
+                        : {
+                            color: isDarkMode ? "#ffffff" : "#0a0a0a",
+                          }}
                     />
                   </div>
                   <div>
-                    <label className={`text-xs ${colors.text} block mb-1.5`}>
+                    <label 
+                      className="text-xs block mb-1.5 font-medium"
+                      style={{
+                        color: isDarkMode ? "#e5e5e5" : "#1a1a1a",
+                      }}
+                    >
                       {language === 'vi' ? 'Nhiệt độ' : 'Temperature'}* (°C)
-                      <span className="text-[10px] opacity-60 ml-1">{language === 'vi' ? 'TB' : 'Mean'}: 25.22</span>
+                      <span 
+                        className="text-[10px] ml-1"
+                        style={{
+                          color: isDarkMode ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.65)",
+                        }}
+                      >
+                        {language === 'vi' ? 'TB' : 'Mean'}: 25.22
+                      </span>
                     </label>
                     <Input
                       type="number"
@@ -474,8 +599,15 @@ export default function ChatInput({ onSendMessage, themeColor, isDarkMode, custo
                       min="-20"
                       max="50"
                       step="0.1"
-                      className={`${colors.inputBg} border-2 ${colors.border} ${colors.inputText} h-9 text-xs`}
-                      style={themeColor === 'custom' ? { borderColor: customColor + '60' } : {}}
+                      className={`${colors.inputBg} border-2 ${colors.border} h-9 text-xs`}
+                      style={themeColor === 'custom' 
+                        ? { 
+                            borderColor: customColor + '60',
+                            color: isDarkMode ? "#ffffff" : "#0a0a0a",
+                          }
+                        : {
+                            color: isDarkMode ? "#ffffff" : "#0a0a0a",
+                          }}
                     />
                   </div>
                 </div>
@@ -483,9 +615,21 @@ export default function ChatInput({ onSendMessage, themeColor, isDarkMode, custo
                 {/* Row 3: Ocean Current Velocity & Ship Type */}
                 <div className="grid grid-cols-3 gap-3">
                   <div>
-                    <label className={`text-xs ${colors.text} block mb-1.5`}>
+                    <label 
+                      className="text-xs block mb-1.5 font-medium"
+                      style={{
+                        color: isDarkMode ? "#e5e5e5" : "#1a1a1a",
+                      }}
+                    >
                       {language === 'vi' ? 'Dòng chảy đại dương' : 'Ocean Current'}* (m/s)
-                      <span className="text-[10px] opacity-60 ml-1">{language === 'vi' ? 'TB' : 'Mean'}: 0.26</span>
+                      <span 
+                        className="text-[10px] ml-1"
+                        style={{
+                          color: isDarkMode ? "rgba(255, 255, 255, 0.7)" : "rgba(0, 0, 0, 0.65)",
+                        }}
+                      >
+                        {language === 'vi' ? 'TB' : 'Mean'}: 0.26
+                      </span>
                     </label>
                     <Input
                       type="number"
@@ -495,24 +639,55 @@ export default function ChatInput({ onSendMessage, themeColor, isDarkMode, custo
                       min="0"
                       max="5"
                       step="0.01"
-                      className={`${colors.inputBg} border-2 ${colors.border} ${colors.inputText} h-9 text-xs`}
-                      style={themeColor === 'custom' ? { borderColor: customColor + '60' } : {}}
+                      className={`${colors.inputBg} border-2 ${colors.border} h-9 text-xs`}
+                      style={themeColor === 'custom' 
+                        ? { 
+                            borderColor: customColor + '60',
+                            color: isDarkMode ? "#ffffff" : "#0a0a0a",
+                          }
+                        : {
+                            color: isDarkMode ? "#ffffff" : "#0a0a0a",
+                          }}
                     />
                   </div>
                   <div>
-                    <label className={`text-xs ${colors.text} block mb-1.5`}>
+                    <label 
+                      className="text-xs block mb-1.5 font-medium"
+                      style={{
+                        color: isDarkMode ? "#e5e5e5" : "#1a1a1a",
+                      }}
+                    >
                       {language === 'vi' ? 'Loại tàu' : 'Ship Type'}*
                     </label>
                     <Select value={shipType} onValueChange={setShipType}>
                       <SelectTrigger
-                        className={`${colors.inputBg} border-2 ${colors.border} ${colors.text} h-9 text-xs`}
-                        style={themeColor === 'custom' ? { borderColor: customColor + '60' } : {}}
+                        className={`${colors.inputBg} border-2 ${colors.border} h-9 text-xs font-medium ${
+                          isDarkMode ? "text-white" : "text-gray-900"
+                        }`}
+                        style={themeColor === 'custom' 
+                          ? { 
+                              borderColor: customColor + '60',
+                              color: isDarkMode ? "#ffffff" : "#0a0a0a",
+                            } 
+                          : {
+                              color: isDarkMode ? "#ffffff" : "#0a0a0a",
+                            }}
                       >
                         <SelectValue placeholder={language === 'vi' ? 'Chọn loại tàu' : 'Pick ship type'} />
                       </SelectTrigger>
-                      <SelectContent>
+                      <SelectContent
+                        className={isDarkMode ? "bg-[#1a1a1a] border-gray-700" : "bg-white border-gray-300"}
+                      >
                         {SHIP_TYPE_OPTIONS.map((option) => (
-                          <SelectItem key={option.value} value={option.value} className="text-xs">
+                          <SelectItem 
+                            key={option.value} 
+                            value={option.value} 
+                            className={`text-xs font-medium ${
+                              isDarkMode
+                                ? "text-white hover:bg-gray-800 focus:bg-gray-800"
+                                : "text-gray-900 hover:bg-gray-100 focus:bg-gray-100"
+                            }`}
+                          >
                             {option.label}
                           </SelectItem>
                         ))}

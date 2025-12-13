@@ -983,10 +983,10 @@ export default function ChatBot({
             text: "text-[#e5e5e5]",
             accent: "text-[#e3d5f7]",
             border: "border-[#e3d5f7]/60",
-            primary: "bg-[#e3d5f7]",
-            primaryHover: "hover:bg-[#d4c5eb]",
+            primary: "bg-[#7c3aed]",
+            primaryHover: "hover:bg-[#6d28d9]",
             primaryText: "text-white",
-            messageBg: "bg-[#e3d5f7]",
+            messageBg: "bg-[#2563eb]",
             messageBotBg: "bg-[#1a1a1a] border-2 border-gray-500",
           }
         : {
@@ -998,7 +998,7 @@ export default function ChatBot({
             primary: "bg-[#2002a6]",
             primaryHover: "hover:bg-[#1a0285]",
             primaryText: "text-[#0a0a0a]",
-            messageBg: "bg-[#2002a6]",
+            messageBg: "bg-[#2563eb]",
             messageBotBg: "bg-white border-2 border-gray-200",
           },
       pink: dark
@@ -1204,13 +1204,20 @@ export default function ChatBot({
                   }}
                 />
                 <div>
-                  <h1 className={`${colors.text} text-sm`}>Fluxmare</h1>
+                  <h1
+                    className="text-sm font-semibold"
+                    style={{
+                      color: isDarkMode ? "#ffffff" : "#0a0a0a",
+                    }}
+                  >
+                    Fluxmare
+                  </h1>
                   <p
                     className="text-xs"
                     style={{
                       color: isDarkMode
-                        ? "rgba(255, 255, 255, 0.6)"
-                        : "rgba(0, 0, 0, 0.5)",
+                        ? "rgba(255, 255, 255, 0.85)"
+                        : "rgba(0, 0, 0, 0.75)",
                     }}
                   >
                     {activeConversation
@@ -1394,7 +1401,12 @@ export default function ChatBot({
                         >
                           <div className="flex items-center gap-2 mb-2">
                             <Lightbulb className={`h-3 w-3 ${colors.accent}`} />
-                            <h3 className={`text-xs ${colors.text}`}>
+                            <h3
+                              className="text-xs font-semibold"
+                              style={{
+                                color: isDarkMode ? "#ffffff" : "#0a0a0a",
+                              }}
+                            >
                               Gợi ý câu hỏi
                             </h3>
                           </div>
@@ -1406,7 +1418,10 @@ export default function ChatBot({
                                   handleSendMessage(suggestion, {});
                                   setShowSuggestions(false);
                                 }}
-                                className={`w-full text-left text-xs p-2 rounded-lg ${colors.bgSecondary} hover:${colors.primary} ${colors.text} border ${colors.border} transition-all`}
+                                className={`w-full text-left text-xs p-2 rounded-lg ${colors.bgSecondary} hover:${colors.primary} border ${colors.border} transition-all font-medium`}
+                                style={{
+                                  color: isDarkMode ? "#e5e5e5" : "#1a1a1a",
+                                }}
                               >
                                 {suggestion}
                               </button>
@@ -1441,8 +1456,8 @@ export default function ChatBot({
                         <div
                           className={`max-w-[80%] rounded-xl px-3 py-2 shadow-lg ${
                             message.type === "user"
-                              ? `${colors.messageBg} ${colors.primaryText}`
-                              : `${colors.messageBotBg} ${colors.text} backdrop-blur-sm`
+                              ? `${colors.messageBg}`
+                              : `${colors.messageBotBg} backdrop-blur-sm`
                           }`}
                           style={
                             message.type === "user" && themeColor === "custom"
@@ -1450,10 +1465,38 @@ export default function ChatBot({
                                   backgroundColor: customColor,
                                   color: isDarkMode ? "#ffffff" : "#0a0a0a",
                                 }
+                              : message.type === "user" &&
+                                themeColor === "default" &&
+                                isDarkMode
+                              ? {
+                                  color: "#ffffff",
+                                }
+                              : message.type === "bot"
+                              ? {
+                                  color: isDarkMode ? "#e5e5e5" : "#1a1a1a",
+                                }
                               : {}
                           }
                         >
-                          <div className="whitespace-pre-wrap text-sm leading-relaxed break-words">
+                          <div
+                            className="whitespace-pre-wrap text-sm leading-relaxed break-words font-medium"
+                            style={{
+                              color:
+                                message.type === "user"
+                                  ? themeColor === "custom"
+                                    ? isDarkMode
+                                      ? "#ffffff"
+                                      : "#0a0a0a"
+                                    : themeColor === "default" && isDarkMode
+                                    ? "#ffffff"
+                                    : isDarkMode
+                                    ? "#ffffff"
+                                    : "#0a0a0a"
+                                  : isDarkMode
+                                  ? "#e5e5e5"
+                                  : "#1a1a1a",
+                            }}
+                          >
                             {message.content}
                           </div>
                         </div>
@@ -1493,7 +1536,12 @@ export default function ChatBot({
                         >
                           <div className="flex items-center gap-2 mb-2">
                             <Lightbulb className={`h-3 w-3 ${colors.accent}`} />
-                            <h3 className={`text-xs ${colors.text}`}>
+                            <h3
+                              className="text-xs font-semibold"
+                              style={{
+                                color: isDarkMode ? "#ffffff" : "#0a0a0a",
+                              }}
+                            >
                               Gợi ý câu hỏi
                             </h3>
                           </div>
@@ -1505,7 +1553,10 @@ export default function ChatBot({
                                   handleSendMessage(suggestion, {});
                                   setShowSuggestions(false);
                                 }}
-                                className={`w-full text-left text-xs p-2 rounded-lg ${colors.bgSecondary} hover:${colors.primary} ${colors.text} border ${colors.border} transition-all`}
+                                className={`w-full text-left text-xs p-2 rounded-lg ${colors.bgSecondary} hover:${colors.primary} border ${colors.border} transition-all font-medium`}
+                                style={{
+                                  color: isDarkMode ? "#e5e5e5" : "#1a1a1a",
+                                }}
                               >
                                 {suggestion}
                               </button>
@@ -1540,8 +1591,8 @@ export default function ChatBot({
                         <div
                           className={`max-w-[80%] rounded-xl px-3 py-2 shadow-lg ${
                             message.type === "user"
-                              ? `${colors.messageBg} ${colors.primaryText}`
-                              : `${colors.messageBotBg} ${colors.text} backdrop-blur-sm`
+                              ? `${colors.messageBg}`
+                              : `${colors.messageBotBg} backdrop-blur-sm`
                           }`}
                           style={
                             message.type === "user" && themeColor === "custom"
@@ -1549,10 +1600,36 @@ export default function ChatBot({
                                   backgroundColor: customColor,
                                   color: getContrastColor(customColor),
                                 }
+                              : message.type === "user" &&
+                                themeColor === "default" &&
+                                isDarkMode
+                              ? {
+                                  color: "#ffffff",
+                                }
+                              : message.type === "bot"
+                              ? {
+                                  color: isDarkMode ? "#e5e5e5" : "#1a1a1a",
+                                }
                               : {}
                           }
                         >
-                          <div className="whitespace-pre-wrap text-sm leading-relaxed break-words">
+                          <div
+                            className="whitespace-pre-wrap text-sm leading-relaxed break-words font-medium"
+                            style={{
+                              color:
+                                message.type === "user"
+                                  ? themeColor === "custom"
+                                    ? getContrastColor(customColor)
+                                    : themeColor === "default" && isDarkMode
+                                    ? "#ffffff"
+                                    : isDarkMode
+                                    ? "#ffffff"
+                                    : "#0a0a0a"
+                                  : isDarkMode
+                                  ? "#e5e5e5"
+                                  : "#1a1a1a",
+                            }}
+                          >
                             {message.content}
                           </div>
                           {message.dashboardData && message.type === "bot" && (

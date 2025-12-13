@@ -96,7 +96,7 @@ export default function ChatHistory({
   const getColors = (theme: ThemeColor, dark: boolean) => {
     const base = {
       default: dark 
-        ? { bg: 'bg-[#0a0a0a]', bgSecondary: 'bg-[#1a1a1a]', border: 'border-[#e3d5f7]/30', text: 'text-[#e5e5e5]', accent: 'text-[#e3d5f7]', primary: 'bg-[#e3d5f7]', primaryHover: 'hover:bg-[#d4c5eb]', primaryText: 'text-[#0a0a0a]', inputBg: 'bg-[#0a0a0a]', placeholderFocus: 'focus:border-[#e3d5f7]' }
+        ? { bg: 'bg-[#0a0a0a]', bgSecondary: 'bg-[#1a1a1a]', border: 'border-[#e3d5f7]/30', text: 'text-[#e5e5e5]', accent: 'text-[#e3d5f7]', primary: 'bg-[#7c3aed]', primaryHover: 'hover:bg-[#6d28d9]', primaryText: 'text-white', inputBg: 'bg-[#0a0a0a]', placeholderFocus: 'focus:border-[#e3d5f7]' }
         : { bg: 'bg-white', bgSecondary: 'bg-white/80', border: 'border-[#2002a6]/50', text: 'text-[#1a1a1a]', accent: 'text-[#2002a6]', primary: 'bg-[#2002a6]', primaryHover: 'hover:bg-[#1a0285]', primaryText: 'text-white', inputBg: 'bg-white', placeholderFocus: 'focus:border-[#2002a6]' },
       pink: dark
         ? { bg: 'bg-[#0a0a0a]', bgSecondary: 'bg-[#1a1a1a]', border: 'border-pink-400/30', text: 'text-pink-50', accent: 'text-pink-300', primary: 'bg-pink-500', primaryHover: 'hover:bg-pink-600', primaryText: 'text-white', inputBg: 'bg-black', placeholderFocus: 'focus:border-pink-400' }
@@ -484,14 +484,18 @@ function ConversationItem({ conversation, isActive, themeColor, isDarkMode = tru
         </div>
       </div>
       <p 
-        className="text-xs line-clamp-2 mb-0.5" 
-        style={{ color: getContrastColor(isDarkMode, themeColor, customColor) }}
+        className="text-xs line-clamp-2 mb-0.5 font-medium" 
+        style={{ 
+          color: isDarkMode ? "#e5e5e5" : "#1a1a1a",
+        }}
       >
         {conversation.title}
       </p>
       <div 
-        className="text-[10px]" 
-        style={{ color: getSecondaryTextColor(isDarkMode, themeColor, customColor) }}
+        className="text-[10px] font-normal" 
+        style={{ 
+          color: isDarkMode ? "rgba(255, 255, 255, 0.75)" : "rgba(0, 0, 0, 0.7)",
+        }}
       >
         {messageCount} tin nhắn
       </div>
