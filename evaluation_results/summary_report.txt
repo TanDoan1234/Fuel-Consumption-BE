@@ -1,0 +1,28 @@
+================================================================================
+LLM EVALUATION REPORT
+================================================================================
+
+Generated: 2025-12-15 03:08:05
+
+EXECUTIVE SUMMARY
+--------------------------------------------------------------------------------
+Winner: Qwen 2.5 VL 7B với điểm trung bình 62.34/100
+
+DETAILED METRICS
+--------------------------------------------------------------------------------
+
+Qwen 2.5 VL 7B:
+  - Avg Response Time: 48.03s
+  - Vietnamese Compliance: 25/25 (100.0%)
+  - Avg Keyword Coverage: 90.0%
+  - No Hallucination Rate: 17/25 (68.0%)
+  - Avg Total Score: 62.34/100
+
+Llama 3.1 8B:
+  - Avg Response Time: 46.56s
+  - Vietnamese Compliance: 25/25 (100.0%)
+  - Avg Keyword Coverage: 88.7%
+  - No Hallucination Rate: 16/25 (64.0%)
+  - Avg Total Score: 61.61/100
+
+================================================================================
