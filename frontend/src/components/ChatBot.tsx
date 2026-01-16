@@ -399,7 +399,6 @@ export default function ChatBot({
   // Available models configuration
   const AVAILABLE_MODELS = [
     { id: "meta-llama-3.1-8b-instruct", label: "LLaMA 3.1 8B" },
-    { id: "google/gemma-2-9b", label: "Gemma 2 9B" },
     { id: "qwen/qwen2.5-vl-7b", label: "Qwen2.5 VL 7B" },
   ];
 
